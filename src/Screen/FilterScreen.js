@@ -7,11 +7,12 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import {Button, Icon} from 'react-native-elements';
+import {Button, Overlay, Icon} from 'react-native-elements';
 import moment from 'moment';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 const FilterScreen = () => {
+  const [filterVisible, setFilterVisible] = useState(false);
   const [selectedRating, setSelectedRating] = useState(null);
   const [selectedExperience, setSelectedExperience] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
@@ -50,119 +51,120 @@ const FilterScreen = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.filterPage}>
-        <View style={styles.topRow}>
-          <Text style={styles.filterText}>Filter</Text>
-          <View style={styles.clearSaveRow}>
-            <Button title="Clear Filter" type="clear" onPress={clearFilters} />
-            <Button title="Save" type="clear" onPress={saveFilters} />
-          </View>
-        </View>
-
-        <Image
-          source={require('./images/11.jpg')}
-          style={styles.image}
-          resizeMode="contain"
-        />
-
-        <Image
-          source={require('./images/22.jpg')}
-          style={styles.image2}
-          resizeMode="contain"
-        />
-
-        <View style={styles.filterOptions}>
-          <View style={styles.ratingContainer}>
-            <Text style={styles.ratingText}>Rating:</Text>
-            <View style={styles.ratingOptions}>
-              {['star1', 'star2', 'star3', 'star4', 'star5'].map(rating => (
-                <Text
-                  key={rating}
-                  style={[
-                    styles.ratingOption,
-                    selectedRating === rating && styles.selectedRatingOption,
-                  ]}
-                  onPress={() => setSelectedRating(rating)}>
-                  {rating}
-                </Text>
-              ))}
+      <Overlay>
+        <View style={styles.filterPage}>
+          <View style={styles.topRow}>
+            <Text style={styles.filterText}>Filter</Text>
+            <View style={styles.clearSaveRow}>
+              <Button
+                title="Clear Filter"
+                type="clear"
+                onPress={clearFilters}
+              />
+              <Button title="Save" type="clear" onPress={saveFilters} />
             </View>
           </View>
 
-          <View style={styles.experienceContainer}>
-            <Text style={styles.experienceText}>Experience:</Text>
-            <View style={styles.experienceOptions}>
-              {['Beginner', 'Intermediate', 'Expert'].map(experience => (
-                <Text
-                  key={experience}
-                  style={[
-                    styles.experienceOption,
-                    selectedExperience === experience &&
-                      styles.selectedExperienceOption,
-                  ]}
-                  onPress={() => setSelectedExperience(experience)}>
-                  {experience}
-                </Text>
-              ))}
-            </View>
-          </View>
+          <Text>Avalability</Text>
 
-          <View style={styles.dateMonthContainer}>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {Array.from(
-                {length: currentDate.daysInMonth() - currentDate.date() + 1},
-                (_, index) => (
-                  <View key={index} style={styles.dateMonthBox}>
-                    <View
-                      style={[
-                        styles.dateMonthRectangle,
-                        selectedDate === currentDate.date() + index &&
-                          styles.selectedDateRectangle,
-                      ]}
-                      onTouchEnd={() =>
-                        setSelectedDate(currentDate.date() + index)
-                      }>
-                      <Text
+          <Image
+            source={require('./images/22.jpg')}
+            style={styles.image2}
+            resizeMode="contain"
+          />
+
+          <View style={styles.filterOptions}>
+            <View style={styles.ratingContainer}>
+              <Text style={styles.ratingText}>Rating:</Text>
+              <View style={styles.ratingOptions}>
+                {['star1', 'star2', 'star3', 'star4', 'star5'].map(rating => (
+                  <Text
+                    key={rating}
+                    style={[
+                      styles.ratingOption,
+                      selectedRating === rating && styles.selectedRatingOption,
+                    ]}
+                    onPress={() => setSelectedRating(rating)}>
+                    {rating}
+                  </Text>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.experienceContainer}>
+              <Text style={styles.experienceText}>Experience:</Text>
+              <View style={styles.experienceOptions}>
+                {['Beginner', 'Intermediate', 'Expert'].map(experience => (
+                  <Text
+                    key={experience}
+                    style={[
+                      styles.experienceOption,
+                      selectedExperience === experience &&
+                        styles.selectedExperienceOption,
+                    ]}
+                    onPress={() => setSelectedExperience(experience)}>
+                    {experience}
+                  </Text>
+                ))}
+              </View>
+            </View>
+
+            <View style={styles.dateMonthContainer}>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                {Array.from(
+                  {length: currentDate.daysInMonth() - currentDate.date() + 1},
+                  (_, index) => (
+                    <View key={index} style={styles.dateMonthBox}>
+                      <View
                         style={[
-                          styles.dateText,
+                          styles.dateMonthRectangle,
                           selectedDate === currentDate.date() + index &&
-                            styles.selectedDateText,
-                        ]}>
-                        {currentDate.date() + index}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.monthText,
-                          selectedDate === currentDate.date() + index &&
-                            styles.selectedDateText,
-                        ]}>
-                        {currentDate.format('MMM')}
-                      </Text>
+                            styles.selectedDateRectangle,
+                        ]}
+                        onTouchEnd={() =>
+                          setSelectedDate(currentDate.date() + index)
+                        }>
+                        <Text
+                          style={[
+                            styles.dateText,
+                            selectedDate === currentDate.date() + index &&
+                              styles.selectedDateText,
+                          ]}>
+                          {currentDate.date() + index}
+                        </Text>
+                        <Text
+                          style={[
+                            styles.monthText,
+                            selectedDate === currentDate.date() + index &&
+                              styles.selectedDateText,
+                          ]}>
+                          {currentDate.format('MMM')}
+                        </Text>
+                      </View>
                     </View>
-                  </View>
-                ),
-              )}
-            </ScrollView>
-          </View>
+                  ),
+                )}
+              </ScrollView>
+            </View>
 
-          <View style={styles.timeContainer}>
-            <Text style={styles.timeText}>Time:</Text>
-            <View style={styles.timePicker}>
-              <Button
-                title={selectedFromTime ? selectedFromTime : 'From Time'}
-                type="clear"
-                onPress={() => toggleTimePicker('from')}
-              />
-              <Button
-                title={selectedToTime ? selectedToTime : 'To Time'}
-                type="clear"
-                onPress={() => toggleTimePicker('to')}
-              />
+            <View style={styles.timeContainer}>
+              <Text style={styles.timeText}>Time:</Text>
+              <View style={styles.timePicker}>
+                <Button
+                  title={selectedFromTime ? selectedFromTime : 'From Time'}
+                  type="clear"
+                  onPress={() => toggleTimePicker('from')}
+                />
+                <Button
+                  title={selectedToTime ? selectedToTime : 'To Time'}
+                  type="clear"
+                  onPress={() => toggleTimePicker('to')}
+                />
+              </View>
             </View>
           </View>
         </View>
-      </View>
-
+      </Overlay>
       <DateTimePickerModal
         isVisible={isTimePickerVisible}
         mode="time"
@@ -207,8 +209,12 @@ const styles = StyleSheet.create({
   filterOptions: {
     marginTop: 20,
   },
+  Text: {
+    fontWeight: 'bold',
+    fontSize: 24,
+  },
   ratingContainer: {
-    marginTop: 470,
+    marginTop: 400,
   },
   ratingText: {
     fontSize: 16,
@@ -258,7 +264,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: 900,
     left: 15,
-    marginTop: 60,
+    marginTop: 15,
     alignItems: 'center',
   },
   dateMonthBox: {
@@ -288,7 +294,12 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   timeContainer: {
-    marginTop: 10,
+    position: 'absolute',
+    flexDirection: 'row',
+    width: 900,
+    left: 15,
+    marginTop: 90,
+    alignItems: 'center',
   },
   timeText: {
     fontSize: 16,
@@ -300,21 +311,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 0,
   },
-  image: {
-    position: 'absolute',
-    width: 500,
-    height: 200,
-    marginRight: 20,
-    left: -100,
-    top: 70,
-  },
+
   image2: {
     position: 'absolute',
     width: 500,
     height: 200,
     marginRight: 50,
     left: -85,
-    top: 300,
+    top: 240,
   },
 });
 

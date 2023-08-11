@@ -7,13 +7,14 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 
 import data1 from 'MHome/data1.json';
 import {useNavigation} from '@react-navigation/native';
 
 import Categories from './Categories';
-
+import Ai from './Ai';
 const KeyValueContainer = ({label, value}) => (
   <View style={styles.keyValueContainer}>
     <View style={styles.valueContainer}>
@@ -148,6 +149,12 @@ const HomeScreen = () => {
   const handleSearchChange = text => {
     setSearchText(text);
   };
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+  const togglePopup = () => {
+    setIsPopupVisible(!isPopupVisible);
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -175,6 +182,25 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate('Seemore')}>
           See More
         </Text>
+        <View style={styles.container}>
+          {/* Button to toggle the popup */}
+          <TouchableOpacity onPress={togglePopup}>
+            <Image source={require('./images/aibot.png')} style={styles.logo} />
+          </TouchableOpacity>
+
+          {/* Popup */}
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={isPopupVisible}
+            onRequestClose={() => setIsPopupVisible(false)}>
+            <View style={styles.modalContainer}>
+              <Text style={styles.modalText}>
+                <Ai />
+              </Text>
+            </View>
+          </Modal>
+        </View>
 
         <UserCard />
         <View style={styles.horizontalLine2} />
@@ -192,6 +218,17 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  logo: {
+    width: 61,
+    height: 61,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   container: {
     flex: 1,
     backgroundColor: '#fff',

@@ -1,13 +1,12 @@
 import React, {useState} from 'react';
 import {
   View,
-  TextInput,
   Text,
-  Button,
   Image,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
+  TextInput,
+  FlatList,
 } from 'react-native';
 
 const botResponses = [
@@ -25,14 +24,32 @@ const botResponses = [
     response: 'Goodbye!',
   },
   {
-    patterns: ['how to manage my finance', 'finance help', 'help for finanace'],
-    response: 'got your query for your referance visit our mentor Finance page',
+    patterns: ['how to manage my finance', 'finance help', 'help for finance'],
+    response:
+      'Got your query for finance. For more information, visit our finance mentor page.',
+  },
+
+  {
+    patterns: ['tell me a joke', 'make me laugh'],
+    response:
+      "Sure, here's a joke: Why don't scientists trust atoms? Because they make up everything!",
+  },
+  {
+    patterns: ['whats the weather today?', 'weather forecast'],
+    response:
+      "I'm sorry, I'm just a text-based bot and can't provide real-time weather updates.",
+  },
+  {
+    patterns: ['help', 'need help', 'show commands'],
+    response:
+      "Sure, here are some things you can ask me:\n- How are you?\n- What's your name?\n- How to manage my finance?\n- Tell me a joke\n- What's the weather today?\n- Goodbye",
   },
 ];
 
 const Ai = () => {
   const [userInput, setUserInput] = useState('');
   const [messageHistory, setMessageHistory] = useState([]);
+  const [isPopupVisible, setPopupVisible] = useState(true);
 
   const handleUserInput = () => {
     const input = userInput.toLowerCase();
@@ -46,7 +63,6 @@ const Ai = () => {
           newMessages.push({sender: 'bot', content: newBotMessage});
           setMessageHistory(newMessages);
           setUserInput('');
-          console.log(newMessages);
           return;
         }
       }
@@ -58,45 +74,69 @@ const Ai = () => {
     newMessages.push({sender: 'bot', content: errorMessage});
     setMessageHistory(newMessages);
     setUserInput('');
-    console.log(newMessages);
+  };
+
+  const closePopup = () => {
+    setPopupVisible(false);
+    setMessageHistory([]);
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.navigate('OtherPage')}>
-        <View style={styles.header}>
-          <Image
-            source={require('MHome/src/Screen/images/aibot.png')}
-            style={styles.logo}
-          />
-          <Text style={styles.heading}>AI Bot</Text>
-        </View>
-      </TouchableOpacity>
-      <View style={styles.chat}>
-        <FlatList
-          data={messageHistory}
-          renderItem={({item}) => (
-            <Text
-              style={item.sender === 'bot' ? styles.botText : styles.userText}>
-              {item.content}
-            </Text>
-          )}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
-      <View style={styles.userInput}>
-        <TextInput
-          style={styles.input}
-          value={userInput}
-          onChangeText={setUserInput}
-          placeholder="Type your message here..."
-          placeholderTextColor="#ccc"
-          autoFocus={false}
-          returnKeyType="send"
-          onSubmitEditing={handleUserInput}
-        />
-        <Button style={styles.button} title="Send" onPress={handleUserInput} />
-      </View>
+      {isPopupVisible && (
+        <TouchableOpacity onPress={closePopup} style={styles.popupContainer}>
+          <View style={styles.popupContent}>
+            <TouchableOpacity onPress={closePopup}>
+              <View style={styles.header}>
+                <Image
+                  source={require('./images/aibot.png')}
+                  style={styles.logo}
+                />
+                <Text style={styles.heading}>AI Bot</Text>
+              </View>
+            </TouchableOpacity>
+
+            <FlatList
+              data={messageHistory}
+              renderItem={({item}) => (
+                <View
+                  style={
+                    item.sender === 'bot'
+                      ? styles.botMessageContainer
+                      : styles.userMessageContainer
+                  }>
+                  <Text
+                    style={
+                      item.sender === 'bot' ? styles.botText : styles.userText
+                    }>
+                    {item.content}
+                  </Text>
+                </View>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              contentContainerStyle={styles.messageList}
+            />
+
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                value={userInput}
+                onChangeText={setUserInput}
+                placeholder="Type your message here..."
+                placeholderTextColor="#ccc"
+                autoFocus={false}
+                returnKeyType="send"
+                onSubmitEditing={handleUserInput}
+              />
+              <TouchableOpacity
+                onPress={handleUserInput}
+                style={styles.sendButton}>
+                <Text style={styles.buttonText}>Send</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -104,87 +144,127 @@ const Ai = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F0F3F7',
+    borderRadius: 16,
+    margin: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4.65,
+    elevation: 8,
   },
+
+  closeButton: {
+    position: 'absolute',
+    top: 16,
+    left: 16,
+    zIndex: 1,
+  },
+
+  popupContent: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingBottom: 16,
+    height: 700,
+    width: 350,
+  },
+
   header: {
     flexDirection: 'row',
-    marginTop: 2,
     alignItems: 'center',
-    justifyContent: 'flex-start',
     padding: 16,
-    backgroundColor: 'white',
+    backgroundColor: 'gray',
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    height: 60,
   },
 
   logo: {
-    width: 61,
-    height: 61,
-    top: 166,
-    left: 42,
-    color: '#000000',
+    width: 68,
+    height: 68,
+    marginRight: 12,
+    marginTop: 10,
   },
 
   heading: {
-    fontFamily: 'Inter',
-    fontSize: 20,
-
-    lineHeight: 18,
-    letterSpacing: -0.16500000655651093,
-    textAlign: 'left',
-    color: '#7B7A7C',
-    width: 166,
-    height: 28,
-    top: 183,
-    left: 127,
+    fontFamily: 'Inter-Bold',
+    fontSize: 24,
+    color: '#FFFFFF',
   },
-  chat: {
-    flex: 1,
+
+  botMessageContainer: {
+    alignItems: 'flex-start',
+    marginVertical: 8,
+    paddingHorizontal: 16,
+  },
+
+  userMessageContainer: {
+    alignItems: 'flex-end',
+    marginVertical: 8,
+    paddingHorizontal: 16,
+  },
+
+  botText: {
+    fontSize: 16,
+    color: '#333333',
+    fontFamily: 'Inter-Regular',
+    backgroundColor: '#E0E0E0',
+    padding: 10,
+    borderRadius: 8,
+    maxWidth: '80%',
+  },
+
+  userText: {
+    fontSize: 16,
+    color: '#333333',
+    fontFamily: 'Inter-Regular',
+    backgroundColor: '#E0E0E0',
+    padding: 10,
+    borderRadius: 8,
+    maxWidth: '80%',
+  },
+
+  messageList: {
     padding: 16,
   },
-  botText: {
-    fontSize: 18,
-    color: ' #7B7A7C',
-    fontFamily: 'Inter',
 
-    lineHeight: 18,
-    letterSpacing: -0.16500000655651093,
-    textAlign: 'justified',
-    backgroundColor: ' #D9D9D9',
-    width: 217,
-    height: 19,
-    top: 271,
-    left: 40,
-  },
-  userText: {
-    fontSize: 18,
-    fontFamily: 'Inter',
-
-    lineHeight: 18,
-    letterSpacing: -0.16500000655651093,
-    textAlign: 'justified',
-    backgroundColor: ' #D9D9D9',
-    width: 217,
-    height: 24,
-    top: 406,
-    left: 173,
-    color: 'blue',
-    alignSelf: 'flex-end',
-  },
-  userInput: {
+  inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 16,
     borderTopWidth: 1,
     borderTopColor: '#e0e0e0',
+    padding: 16,
   },
+
   input: {
     flex: 1,
     height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 8,
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 8,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 12,
     marginRight: 8,
+    fontFamily: 'Inter-Regular',
+    fontSize: 16,
+  },
+
+  sendButton: {
+    backgroundColor: '#007AFF',
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    alignItems: 'center',
+  },
+
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontFamily: 'Inter-Bold',
   },
 });
 

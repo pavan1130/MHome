@@ -9,6 +9,8 @@ import {
   ScrollView,
 } from 'react-native';
 import data from 'MHome/data.json';
+import {useNavigation} from '@react-navigation/native';
+
 const KeyValueContainer = ({label, value}) => (
   <View style={styles.keyValueContainer}>
     <View style={styles.valueContainer}>
@@ -87,6 +89,8 @@ const Footer = () => {
   );
 };
 const Technology_Coding = () => {
+  const navigation = useNavigation();
+
   const [searchText, setSearchText] = useState('');
 
   const handleSearchChange = text => {
@@ -96,10 +100,12 @@ const Technology_Coding = () => {
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.appNameContainer}>
-          <Image
-            source={require('MHome/src/Screen/images/icons8-left-arrow-32.png')}
-            style={styles.appLogo}
-          />
+          <TouchableOpacity onPress={() => navigation.navigate('Homescreen')}>
+            <Image
+              source={require('MHome/src/Screen/images/icons8-left-arrow-32.png')}
+              style={styles.appLogo}
+            />
+          </TouchableOpacity>
           <View style={styles.appNameTextContainer}>
             <Text style={styles.appNameText}>Technology & Coding</Text>
           </View>
