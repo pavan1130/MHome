@@ -9,10 +9,8 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-
 import data1 from 'MHome/data1.json';
 import {useNavigation} from '@react-navigation/native';
-
 import Categories from './Categories';
 import Ai from './Ai';
 const KeyValueContainer = ({label, value}) => (
@@ -145,6 +143,7 @@ const Footer = () => {
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [searchText, setSearchText] = useState('');
+  const [menuVisible, setMenuVisible] = useState(false);
 
   const handleSearchChange = text => {
     setSearchText(text);
@@ -154,12 +153,172 @@ const HomeScreen = () => {
   const togglePopup = () => {
     setIsPopupVisible(!isPopupVisible);
   };
+  const toggleMenu = () => {
+    setMenuVisible(!menuVisible);
+  };
+
+  const navigateToGroup = () => {
+    console.log('Navigating to Group screen');
+    toggleMenu();
+  };
+
+  const navigateToEventList = () => {
+    console.log('Navigating to Event List screen');
+    toggleMenu();
+  };
+
+  const navigateToTransactions = () => {
+    console.log('Navigating to Transactions screen');
+    toggleMenu();
+  };
+
+  const navigateToSettings = () => {
+    console.log('Navigating to Settings screen');
+    toggleMenu();
+  };
+  const shareApp = () => {
+    console.log('Sharing the app');
+    toggleMenu();
+  };
+
+  const navigateToHelp = () => {
+    console.log('Navigating to Help & FAQs screen');
+    toggleMenu();
+  };
+
+  const navigateToAbout = () => {
+    console.log('Navigating to About Us screen');
+    toggleMenu();
+  };
+  const navigateToBeAMentor = () => {
+    console.log('Navigating to Be a Mentor screen');
+    toggleMenu();
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView>
         <View style={styles.appNameContainer}>
-          <Image source={require('./images/app.jpg')} style={styles.appLogo} />
+          <TouchableOpacity onPress={toggleMenu}>
+            <Image
+              source={require('./images/app.jpg')}
+              style={styles.appLogo}
+            />
+          </TouchableOpacity>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={menuVisible}
+            onRequestClose={toggleMenu}>
+            <View style={styles.menuModal}>
+              <View style={styles.accountDetails}>
+                <Image
+                  source={require('MHome/src/Screen/images/user.png')}
+                  style={[styles.usericon]}
+                />
+                <View>
+                  <Text style={[styles.accountName, {color: 'grey'}]}>
+                    arun das
+                  </Text>
+                  <Text style={[styles.accountEmail, {color: 'grey'}]}>
+                    arun.doe@example.com
+                  </Text>
+                </View>
+              </View>
+
+              <TouchableOpacity onPress={toggleMenu} style={styles.closeButton}>
+                <Image
+                  source={require('MHome/src/Screen/images/close.png')}
+                  style={[styles.closeicon]}
+                />
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={navigateToGroup}
+                style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/breastfeeding.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  Be a mentor
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.menuline} />
+              <TouchableOpacity
+                onPress={navigateToEventList}
+                style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/event_list.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  My mentors
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.menuline} />
+              <TouchableOpacity
+                onPress={navigateToTransactions}
+                style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/receipt_long.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  Transactions
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.menuline} />
+              <TouchableOpacity
+                onPress={navigateToSettings}
+                style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/settings.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  App Settings
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.menuline} />
+              <TouchableOpacity onPress={shareApp} style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/share.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  Share App
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.menuline} />
+
+              <TouchableOpacity
+                onPress={navigateToHelp}
+                style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/quiz.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  Help & FAQs
+                </Text>
+              </TouchableOpacity>
+              <View style={styles.menuline} />
+              <TouchableOpacity
+                onPress={navigateToAbout}
+                style={styles.menuItem}>
+                <Image
+                  source={require('MHome/src/Screen/images/event_list.png')}
+                  style={[styles.menuicon]}
+                />
+                <Text style={[styles.menuItemText, {color: 'grey'}]}>
+                  About Us
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
           <View style={styles.appNameTextContainer}>
             <Text style={styles.appNameText}>Mentor App</Text>
           </View>
@@ -182,6 +341,7 @@ const HomeScreen = () => {
           onPress={() => navigation.navigate('Seemore')}>
           See More
         </Text>
+        <View></View>
         <View style={styles.container}>
           {/* Button to toggle the popup */}
           <TouchableOpacity onPress={togglePopup}>
@@ -190,8 +350,7 @@ const HomeScreen = () => {
 
           {/* Popup */}
           <Modal
-            animationType="slide"
-            transparent={true}
+            animationType="flip"
             visible={isPopupVisible}
             onRequestClose={() => setIsPopupVisible(false)}>
             <View style={styles.modalContainer}>
@@ -200,8 +359,8 @@ const HomeScreen = () => {
               </Text>
             </View>
           </Modal>
+          <View />
         </View>
-
         <UserCard />
         <View style={styles.horizontalLine2} />
         <Text style={styles.RecommendedText}>Recommended</Text>
@@ -212,6 +371,7 @@ const HomeScreen = () => {
         </Text>
         <UserCard1 />
       </ScrollView>
+
       <Footer />
     </View>
   );
@@ -533,6 +693,86 @@ const styles = StyleSheet.create({
     width: 76,
     height: 30,
     textAlign: 'center',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'left',
+  },
+  darkBackground: {
+    backgroundColor: '#1E1E1E',
+  },
+  switchContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+  },
+  accountDetails: {
+    flexDirection: 'row',
+    alignItems: 'left',
+    marginBottom: 50,
+    marginLeft: 20,
+    marginTop: 40,
+  },
+  accountName: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginLeft: 15,
+    color: 'black',
+  },
+  accountEmail: {
+    fontSize: 18,
+    color: 'black',
+    marginLeft: 15,
+  },
+  menuButton: {
+    position: 'absolute',
+    top: 50,
+    left: 20,
+  },
+  menuModal: {
+    flex: 1,
+    backgroundColor: 'white',
+    width: '80%',
+    alignSelf: 'flex-start',
+    backgroundColor: '#F4F4F4',
+  },
+  closeButton: {
+    alignSelf: 'flex-end',
+    margin: 20,
+    marginTop: -70,
+  },
+  closeicon: {
+    height: 25,
+    width: 25,
+    left: 15,
+    top: -50,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    padding: 10,
+    left: 12,
+  },
+  menuItemText: {
+    fontSize: 20,
+    marginLeft: 10,
+  },
+  menuicon: {
+    width: 20,
+    height: 20,
+  },
+  menuicon: {
+    width: 30,
+    height: 30,
+  },
+  menuline: {
+    height: 1,
+    backgroundColor: '#867676',
+    borderRadius: 1,
+    width: '80%',
+    left: 20,
   },
 });
 

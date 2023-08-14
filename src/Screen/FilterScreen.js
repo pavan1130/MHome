@@ -6,35 +6,48 @@ import {
   Dimensions,
   ScrollView,
   Image,
+  TouchableOpacity,
 } from 'react-native';
-import {Button, Overlay, Icon} from 'react-native-elements';
+import {Button, Overlay} from 'react-native-elements';
 import moment from 'moment';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {useNavigation} from '@react-navigation/native';
 
 const FilterScreen = () => {
-  const [filterVisible, setFilterVisible] = useState(false);
+  const navigation = useNavigation();
+  const [successMessageVisible, setSuccessMessageVisible] = useState(false);
   const [selectedRating, setSelectedRating] = useState(null);
   const [selectedExperience, setSelectedExperience] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedFromTime, setSelectedFromTime] = useState(null);
-  const [selectedToTime, setSelectedToTime] = useState(null);
-  const [isTimePickerVisible, setTimePickerVisible] = useState(false);
-  const [timePickerType, setTimePickerType] = useState(null);
   const currentDate = moment();
+  const [fromTime, setFromTime] = useState(new Date());
+  const [toTime, setToTime] = useState(new Date());
+  const [showFromPicker, setShowFromPicker] = useState(false);
+  const [showToPicker, setShowToPicker] = useState(false);
 
-  const toggleTimePicker = type => {
-    setTimePickerType(type);
-    setTimePickerVisible(!isTimePickerVisible);
+  const handleFromTimeChange = (event, selectedTime) => {
+    if (selectedTime !== undefined) {
+      setFromTime(selectedTime);
+      const formattedTime = moment(selectedTime).format('hh:mm A');
+      setSelectedFromTime(formattedTime);
+    }
+    setShowFromPicker(false);
   };
 
-  const handleTimeConfirm = time => {
-    const formattedTime = moment(time).format('hh:mm A');
-    if (timePickerType === 'from') {
-      setSelectedFromTime(formattedTime);
-    } else if (timePickerType === 'to') {
-      setSelectedToTime(formattedTime);
+  const handleToTimeChange = (event, selectedTime) => {
+    if (selectedTime !== undefined) {
+      setToTime(selectedTime);
     }
-    toggleTimePicker(null);
+    setShowToPicker(false);
+  };
+
+  const openFromTimePicker = () => {
+    setShowFromPicker(true);
+  };
+
+  const openToTimePicker = () => {
+    setShowToPicker(true);
   };
 
   const clearFilters = () => {
@@ -42,31 +55,122 @@ const FilterScreen = () => {
     setSelectedExperience(null);
     setSelectedDate(null);
     setSelectedFromTime(null);
-    setSelectedToTime(null);
+    setFromTime(new Date());
+    setToTime(new Date());
   };
 
   const saveFilters = () => {
-    // Add your logic to save filters here
+    // Replace this with your actual save logic
+    const saveSuccessful = performSaveOperation(); // Call your save function here
+
+    if (saveSuccessful) {
+      setSuccessMessageVisible(true);
+      setTimeout(() => {
+        setSuccessMessageVisible(false);
+        clearFilters();
+      }, 3000);
+    }
   };
+
+  const performSaveOperation = () => {
+    const isSaveSuccessful = Math.random() < 0.8;
+    return isSaveSuccessful;
+  };
+  const formattedFromTime = moment(fromTime).format('hh:mm A');
+  const formattedToTime = moment(toTime).format('hh:mm A');
 
   return (
     <View style={styles.container}>
       <Overlay>
         <View style={styles.filterPage}>
           <View style={styles.topRow}>
+            <TouchableOpacity onPress={() => navigation.navigate('Homescreen')}>
+              <Image
+                source={require('MHome/src/Screen/images/icons8-left-arrow-32.png')}
+                style={styles.appLogo}
+              />
+            </TouchableOpacity>
             <Text style={styles.filterText}>Filter</Text>
             <View style={styles.clearSaveRow}>
-              <Button
-                title="Clear Filter"
-                type="clear"
-                onPress={clearFilters}
-              />
+              <Button title="Clear" type="clear" onPress={clearFilters} />
               <Button title="Save" type="clear" onPress={saveFilters} />
             </View>
           </View>
+          {successMessageVisible && (
+            <View style={styles.successMessage}>
+              <Text style={styles.successMessageText}>
+                Filters saved successfully!
+              </Text>
+            </View>
+          )}
+          <View style={styles.dateMonthContainer}>
+            <Text style={styles.sectionTitle}>Availability</Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {Array.from(
+                {length: currentDate.daysInMonth() - currentDate.date() + 1},
+                (_, index) => (
+                  <View key={index} style={styles.dateMonthBox}>
+                    <View
+                      style={[
+                        styles.dateMonthRectangle,
+                        selectedDate === currentDate.date() + index &&
+                          styles.selectedDateRectangle,
+                      ]}
+                      onTouchEnd={() =>
+                        setSelectedDate(currentDate.date() + index)
+                      }>
+                      <Text
+                        style={[
+                          styles.dateText,
+                          selectedDate === currentDate.date() + index &&
+                            styles.selectedDateText,
+                        ]}>
+                        {currentDate.date() + index}
+                      </Text>
+                      <Text
+                        style={[
+                          styles.monthText,
+                          selectedDate === currentDate.date() + index &&
+                            styles.selectedDateText,
+                        ]}>
+                        {currentDate.format('MMM')}
+                      </Text>
+                    </View>
+                  </View>
+                ),
+              )}
+            </ScrollView>
+          </View>
 
-          <Text>Avalability</Text>
-
+          <View style={styles.timeContainer}>
+            <TouchableOpacity onPress={openFromTimePicker}>
+              <Text style={styles.timeText}>From: {formattedFromTime}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={openToTimePicker}>
+              <Text style={styles.timeText}>To: {formattedToTime}</Text>
+            </TouchableOpacity>
+            {showFromPicker && (
+              <DateTimePicker
+                testID="fromTimePicker"
+                value={fromTime}
+                mode="time"
+                is24Hour={false}
+                display="default"
+                onChange={handleFromTimeChange}
+              />
+            )}
+            {showToPicker && (
+              <DateTimePicker
+                testID="toTimePicker"
+                value={toTime}
+                mode="time"
+                is24Hour={false}
+                display="default"
+                onChange={handleToTimeChange}
+              />
+            )}
+          </View>
+          <View style={styles.line1} />
           <Image
             source={require('./images/22.jpg')}
             style={styles.image2}
@@ -90,7 +194,7 @@ const FilterScreen = () => {
                 ))}
               </View>
             </View>
-
+            <View style={styles.line} />
             <View style={styles.experienceContainer}>
               <Text style={styles.experienceText}>Experience:</Text>
               <View style={styles.experienceOptions}>
@@ -108,69 +212,9 @@ const FilterScreen = () => {
                 ))}
               </View>
             </View>
-
-            <View style={styles.dateMonthContainer}>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-                {Array.from(
-                  {length: currentDate.daysInMonth() - currentDate.date() + 1},
-                  (_, index) => (
-                    <View key={index} style={styles.dateMonthBox}>
-                      <View
-                        style={[
-                          styles.dateMonthRectangle,
-                          selectedDate === currentDate.date() + index &&
-                            styles.selectedDateRectangle,
-                        ]}
-                        onTouchEnd={() =>
-                          setSelectedDate(currentDate.date() + index)
-                        }>
-                        <Text
-                          style={[
-                            styles.dateText,
-                            selectedDate === currentDate.date() + index &&
-                              styles.selectedDateText,
-                          ]}>
-                          {currentDate.date() + index}
-                        </Text>
-                        <Text
-                          style={[
-                            styles.monthText,
-                            selectedDate === currentDate.date() + index &&
-                              styles.selectedDateText,
-                          ]}>
-                          {currentDate.format('MMM')}
-                        </Text>
-                      </View>
-                    </View>
-                  ),
-                )}
-              </ScrollView>
-            </View>
-
-            <View style={styles.timeContainer}>
-              <Text style={styles.timeText}>Time:</Text>
-              <View style={styles.timePicker}>
-                <Button
-                  title={selectedFromTime ? selectedFromTime : 'From Time'}
-                  type="clear"
-                  onPress={() => toggleTimePicker('from')}
-                />
-                <Button
-                  title={selectedToTime ? selectedToTime : 'To Time'}
-                  type="clear"
-                  onPress={() => toggleTimePicker('to')}
-                />
-              </View>
-            </View>
           </View>
         </View>
       </Overlay>
-      <DateTimePickerModal
-        isVisible={isTimePickerVisible}
-        mode="time"
-        onConfirm={handleTimeConfirm}
-        onCancel={() => toggleTimePicker(null)}
-      />
     </View>
   );
 };
@@ -178,33 +222,45 @@ const FilterScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  filterOverlay: {
-    position: 'absolute',
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-    backgroundColor: 'white',
-    padding: 20,
   },
   filterPage: {
-    flexDirection: 'column',
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
   },
-  topRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 10,
+  appLogo: {
+    width: 32,
+    height: 32,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 20,
   },
   filterText: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginLeft: 10,
-    left: -70,
+    left: 20,
+    color: 'black',
   },
   clearSaveRow: {
     flexDirection: 'row',
+    left: 200,
+  },
+  topRow: {
+    flexDirection: 'row',
+  },
+  image2: {
+    width: Dimensions.get('window').width - 32,
+    height: 200,
+    alignSelf: 'center',
+    marginTop: 16,
+  },
+  heading: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 20,
   },
   filterOptions: {
     marginTop: 20,
@@ -214,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   ratingContainer: {
-    marginTop: 400,
+    marginTop: 30,
   },
   ratingText: {
     fontSize: 16,
@@ -223,17 +279,17 @@ const styles = StyleSheet.create({
   },
   ratingOptions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 0,
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
   ratingOption: {
     padding: 5,
     borderWidth: 1,
     borderColor: '#D9D9D9',
-    borderRadius: 5,
+    borderRadius: 15,
   },
   selectedRatingOption: {
-    backgroundColor: '#333',
+    backgroundColor: '#7B7A7C',
     color: 'white',
   },
   experienceContainer: {
@@ -246,79 +302,78 @@ const styles = StyleSheet.create({
   },
   experienceOptions: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 0,
+    justifyContent: 'space-around',
+    marginTop: 10,
   },
   experienceOption: {
     padding: 5,
     borderWidth: 1,
     borderColor: '#D9D9D9',
-    borderRadius: 5,
+    borderRadius: 15,
   },
   selectedExperienceOption: {
-    backgroundColor: '#333',
+    backgroundColor: '#7B7A7C',
     color: 'white',
   },
   dateMonthContainer: {
-    position: 'absolute',
-    flexDirection: 'row',
-    width: 900,
-    left: 15,
-    marginTop: 15,
-    alignItems: 'center',
+    marginBottom: 16,
+    marginTop: 30,
   },
   dateMonthBox: {
-    marginRight: 10,
-    alignItems: 'center',
+    marginRight: 8,
   },
   dateMonthRectangle: {
     borderWidth: 1,
     borderColor: '#D9D9D9',
     borderRadius: 10,
     padding: 10,
-    width: 50,
+    width: 72,
+    height: 90,
     alignItems: 'center',
-  },
-  dateText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  monthText: {
-    fontSize: 12,
   },
   selectedDateRectangle: {
-    backgroundColor: '#333',
-    borderColor: '#333',
+    borderColor: 'grey',
+    backgroundColor: '#7B7A7C',
+  },
+  dateText: {
+    fontSize: 25,
+  },
+  monthText: {
+    fontSize: 18,
   },
   selectedDateText: {
-    color: 'white',
+    color: 'black',
+    fontWeight: 'bold',
   },
   timeContainer: {
-    position: 'absolute',
     flexDirection: 'row',
-    width: 900,
-    left: 15,
-    marginTop: 90,
     alignItems: 'center',
+    marginTop: 16,
+    justifyContent: 'space-around',
   },
   timeText: {
     fontSize: 16,
     fontWeight: 'bold',
-    marginBottom: 8,
+    color: '#333',
+    marginLeft: 10,
   },
-  timePicker: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 0,
+  line: {
+    height: 1,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 1,
+    width: '100%',
+    marginTop: 20,
   },
-
-  image2: {
-    position: 'absolute',
-    width: 500,
-    height: 200,
-    marginRight: 50,
-    left: -85,
-    top: 240,
+  line1: {
+    height: 1,
+    backgroundColor: '#D9D9D9',
+    borderRadius: 1,
+    width: '100%',
+    marginTop: 20,
+  },
+  successMessageText: {
+    color: 'green',
+    fontSize: 16,
   },
 });
 

@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  ScrollView,
 } from 'react-native';
 
 const botResponses = [
@@ -84,18 +85,18 @@ const Ai = () => {
   return (
     <View style={styles.container}>
       {isPopupVisible && (
-        <TouchableOpacity onPress={closePopup} style={styles.popupContainer}>
-          <View style={styles.popupContent}>
+        <View style={styles.popupContent}>
+          <View style={styles.header}>
             <TouchableOpacity onPress={closePopup}>
-              <View style={styles.header}>
-                <Image
-                  source={require('./images/aibot.png')}
-                  style={styles.logo}
-                />
-                <Text style={styles.heading}>AI Bot</Text>
-              </View>
+              <Image
+                source={require('./images/aibot.png')}
+                style={styles.logo}
+              />
             </TouchableOpacity>
+            <Text style={styles.heading}>AI Bot</Text>
+          </View>
 
+          <ScrollView contentContainerStyle={styles.messageContainer}>
             <FlatList
               data={messageHistory}
               renderItem={({item}) => (
@@ -116,26 +117,26 @@ const Ai = () => {
               keyExtractor={(item, index) => index.toString()}
               contentContainerStyle={styles.messageList}
             />
+          </ScrollView>
 
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                value={userInput}
-                onChangeText={setUserInput}
-                placeholder="Type your message here..."
-                placeholderTextColor="#ccc"
-                autoFocus={false}
-                returnKeyType="send"
-                onSubmitEditing={handleUserInput}
-              />
-              <TouchableOpacity
-                onPress={handleUserInput}
-                style={styles.sendButton}>
-                <Text style={styles.buttonText}>Send</Text>
-              </TouchableOpacity>
-            </View>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              value={userInput}
+              onChangeText={setUserInput}
+              placeholder="Type your message here..."
+              placeholderTextColor="#ccc"
+              autoFocus={false}
+              returnKeyType="send"
+              onSubmitEditing={handleUserInput}
+            />
+            <TouchableOpacity
+              onPress={handleUserInput}
+              style={styles.sendButton}>
+              <Text style={styles.buttonText}>Send</Text>
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+        </View>
       )}
     </View>
   );
@@ -195,19 +196,24 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#FFFFFF',
   },
-
+  messageContainer: {
+    flexGrow: 1,
+  },
   botMessageContainer: {
-    alignItems: 'flex-start',
-    marginVertical: 8,
-    paddingHorizontal: 16,
+    backgroundColor: '#f0f0f0',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 8,
+    alignSelf: 'flex-start',
   },
-
   userMessageContainer: {
-    alignItems: 'flex-end',
-    marginVertical: 8,
-    paddingHorizontal: 16,
+    backgroundColor: 'rgb(173, 216, 230)',
+    padding: 10,
+    borderRadius: 8,
+    marginBottom: 8,
+    alignSelf: 'flex-end',
+    maxWidth: '70%',
   },
-
   botText: {
     fontSize: 16,
     color: '#333333',
@@ -227,7 +233,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     maxWidth: '80%',
   },
-
   messageList: {
     padding: 16,
   },
