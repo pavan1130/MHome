@@ -120,6 +120,8 @@ const UserCard1 = () => {
 };
 
 const Footer = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.footerContainer}>
       <Image
@@ -135,7 +137,9 @@ const Footer = () => {
         style={styles.footerImage3}
       />
       <Image source={require('./images/h.png')} style={styles.footerImage4} />
-      <Image source={require('./images/m.png')} style={styles.footerImage5} />
+      <TouchableOpacity>
+        <Image source={require('./images/m.png')} style={styles.footerImage5} />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -155,44 +159,6 @@ const HomeScreen = () => {
   };
   const toggleMenu = () => {
     setMenuVisible(!menuVisible);
-  };
-
-  const navigateToGroup = () => {
-    console.log('Navigating to Group screen');
-    toggleMenu();
-  };
-
-  const navigateToEventList = () => {
-    console.log('Navigating to Event List screen');
-    toggleMenu();
-  };
-
-  const navigateToTransactions = () => {
-    console.log('Navigating to Transactions screen');
-    toggleMenu();
-  };
-
-  const navigateToSettings = () => {
-    console.log('Navigating to Settings screen');
-    toggleMenu();
-  };
-  const shareApp = () => {
-    console.log('Sharing the app');
-    toggleMenu();
-  };
-
-  const navigateToHelp = () => {
-    console.log('Navigating to Help & FAQs screen');
-    toggleMenu();
-  };
-
-  const navigateToAbout = () => {
-    console.log('Navigating to About Us screen');
-    toggleMenu();
-  };
-  const navigateToBeAMentor = () => {
-    console.log('Navigating to Be a Mentor screen');
-    toggleMenu();
   };
 
   return (
@@ -234,9 +200,7 @@ const HomeScreen = () => {
                 />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={navigateToGroup}
-                style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/breastfeeding.png')}
                   style={[styles.menuicon]}
@@ -247,31 +211,31 @@ const HomeScreen = () => {
               </TouchableOpacity>
               <View style={styles.menuline} />
               <TouchableOpacity
-                onPress={navigateToEventList}
+                onPress={() => navigation.navigate('MettingHistroy')}
                 style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/event_list.png')}
                   style={[styles.menuicon]}
                 />
                 <Text style={[styles.menuItemText, {color: 'grey'}]}>
-                  My mentors
+                  Meeting History
                 </Text>
               </TouchableOpacity>
               <View style={styles.menuline} />
               <TouchableOpacity
-                onPress={navigateToTransactions}
+                onPress={() => navigation.navigate('Payment')}
                 style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/receipt_long.png')}
                   style={[styles.menuicon]}
                 />
                 <Text style={[styles.menuItemText, {color: 'grey'}]}>
-                  Transactions
+                  Payments
                 </Text>
               </TouchableOpacity>
               <View style={styles.menuline} />
               <TouchableOpacity
-                onPress={navigateToSettings}
+                onPress={() => navigation.navigate('appsetting')}
                 style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/settings.png')}
@@ -282,7 +246,7 @@ const HomeScreen = () => {
                 </Text>
               </TouchableOpacity>
               <View style={styles.menuline} />
-              <TouchableOpacity onPress={shareApp} style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/share.png')}
                   style={[styles.menuicon]}
@@ -293,9 +257,7 @@ const HomeScreen = () => {
               </TouchableOpacity>
               <View style={styles.menuline} />
 
-              <TouchableOpacity
-                onPress={navigateToHelp}
-                style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/quiz.png')}
                   style={[styles.menuicon]}
@@ -305,9 +267,7 @@ const HomeScreen = () => {
                 </Text>
               </TouchableOpacity>
               <View style={styles.menuline} />
-              <TouchableOpacity
-                onPress={navigateToAbout}
-                style={styles.menuItem}>
+              <TouchableOpacity style={styles.menuItem}>
                 <Image
                   source={require('MHome/src/Screen/images/event_list.png')}
                   style={[styles.menuicon]}
@@ -540,7 +500,7 @@ const styles = StyleSheet.create({
   },
   footerImage5: {
     position: 'absolute',
-    top: 30,
+    top: -50,
     bottom: 20,
     right: 40,
     width: 32,

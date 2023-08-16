@@ -13,6 +13,11 @@ import LeadershipManagement from './src/Screen/CategorieScreens/LeadershipManage
 import Entrepreneurship from './src/Screen/CategorieScreens/Entrepreneurship';
 import PersonalDevelopment from './src/Screen/CategorieScreens/PersonalDevelopment';
 import SeeMore from './src/Screen/SeeMore';
+import MeetingHistory from './src/Screen/MeetingHistory';
+import NotificationScreen from './src/Screen/NotificationScreen';
+import PaymentScreen from './src/Screen/PaymentScreen';
+import AppSetting from './src/Screen/AppSetting';
+import AppSettingScreen from './src/Screen/AppSettingScreen';
 
 const Stack = createStackNavigator();
 
@@ -75,17 +80,36 @@ const App = () => {
           component={PersonalDevelopment}
           options={{headerShown: false}}
         />
+        <Stack.Screen
+          name="notification"
+          component={NotificationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Payment"
+          component={PaymentScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="MettingHistroy"
+          component={MeetingHistory}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="appsetting"
+          component={AppSetting}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="appsettingScreen"
+          component={AppSettingScreen}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
 
-    // <FinanceInvesting />
-    // <Education_Academics />
-    // <Health_Wellness />
-    // <Arts_Design />
-    // <Technology_Coding />
-    // <LeadershipManagement />
-    // <Entrepreneurship />
-    // <PersonalDevelopment />
+    // <MeetingHistory />
+    // <NotificationScreen />
   );
 };
 
