@@ -257,7 +257,9 @@ const HomeScreen = () => {
               </TouchableOpacity>
               <View style={styles.menuline} />
 
-              <TouchableOpacity style={styles.menuItem}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('HelpSupport')}>
                 <Image
                   source={require('MHome/src/Screen/images/quiz.png')}
                   style={[styles.menuicon]}
@@ -267,7 +269,9 @@ const HomeScreen = () => {
                 </Text>
               </TouchableOpacity>
               <View style={styles.menuline} />
-              <TouchableOpacity style={styles.menuItem}>
+              <TouchableOpacity
+                style={styles.menuItem}
+                onPress={() => navigation.navigate('About')}>
                 <Image
                   source={require('MHome/src/Screen/images/event_list.png')}
                   style={[styles.menuicon]}
