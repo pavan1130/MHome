@@ -137,7 +137,7 @@ const Footer = () => {
         style={styles.footerImage3}
       />
       <Image source={require('./images/h.png')} style={styles.footerImage4} />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('FirstChatScreen')}>
         <Image source={require('./images/m.png')} style={styles.footerImage5} />
       </TouchableOpacity>
     </View>
