@@ -19,11 +19,12 @@ import PaymentScreen from './src/Screen/PaymentScreen';
 import AppSetting from './src/Screen/AppSetting';
 import AppSettingScreen from './src/Screen/AppSettingScreen';
 import ChatScreen from './src/Screen/ChatScreen';
-import AboutusScreen from './AboutusScreen';
+import AboutusScreen from './src/Screen/AboutusScreen';
 import Help_Support from './src/Screen/Help_Support';
 import NoNetworkScreen from './src/Screen/NoNetworkScreen';
 import ChatScreenFirst from './src/Screen/ChatScreenFirst';
 import Demo from './src/Screen/Demo';
+import PinnedMsgScreen from './src/Screen/PinnedMsgScreen';
 
 const Stack = createStackNavigator();
 
@@ -129,6 +130,11 @@ const App = () => {
         <Stack.Screen
           name="ChatScreen"
           component={ChatScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Pinnedmsg"
+          component={PinnedMsgScreen}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

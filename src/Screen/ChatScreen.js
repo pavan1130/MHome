@@ -236,17 +236,25 @@ const ChatScreen = () => {
   };
 
   const PinnedContent = ({pinnedMessages}) => {
+    const navigation = useNavigation();
     const pinnedMessageCount = pinnedMessages.length;
-
+    const handleMessagePress = item => {
+      // Navigate to a screen passing the message details
+      navigation.navigate('Pinnedmsg', {message: item});
+    };
     return (
-      <View style={styles.pinnedContentContainer}>
-        <Image
-          source={require('MHome/src/Screen/images/pin.png')}
-          style={styles.pinnedIcon}
-        />
-        <Text style={styles.pinnedText}>Pinned Content</Text>
-        <Text style={styles.pinnedCountText}>{pinnedMessageCount} Pinned</Text>
-      </View>
+      <TouchableOpacity onPress={handleMessagePress}>
+        <View style={styles.pinnedContentContainer}>
+          <Image
+            source={require('MHome/src/Screen/images/pin.png')}
+            style={styles.pinnedIcon}
+          />
+          <Text style={styles.pinnedText}>Pinned Content</Text>
+          <Text style={styles.pinnedCountText}>
+            {pinnedMessageCount} Pinned
+          </Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
@@ -333,9 +341,11 @@ const ChatScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.messageCountBox}>
-          <Text style={styles.messageCountText}>
-            Messages Sent: {messageCount}
-          </Text>
+          <Image
+            source={require('MHome/src/Screen/images/chat_bubble_FILL0_wght400_GRAD0_opsz48.png')}
+            style={[styles.msgicon]}
+          />
+          <Text style={styles.messageCountText}>{messageCount}</Text>
         </View>
       </View>
       {optionsVisible && (
@@ -450,6 +460,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     width: '93%',
     left: 10,
+    top: 25,
   },
   input: {
     flex: 1,
@@ -483,18 +494,26 @@ const styles = StyleSheet.create({
   },
   backgroundColor: {
     backgroundColor: '#D9D9D9',
+    height: 100,
   },
   messageCountBox: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#585858',
+    position: 'absolute',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 8,
-    marginTop: 8,
+    top: 1,
+    left: 170,
+  },
+  msgicon: {
+    width: 30,
+    height: 30,
   },
   messageCountText: {
-    color: 'white',
+    color: 'black',
+    position: 'relative',
+    top: -27,
   },
   buyPopupContainer: {
     flex: 1,
